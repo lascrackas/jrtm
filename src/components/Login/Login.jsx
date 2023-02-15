@@ -48,7 +48,7 @@ const Login = ({setLoading}) => {
 
   return (
     <div>
-
+        <h3 className='text-center mt-2 text-3xl font-semibold'>JTRM</h3>
         {login==="login" && 
             <div>
     

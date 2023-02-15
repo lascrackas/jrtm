@@ -7,6 +7,8 @@ import Admin from "./components/Admin/Admin";
 import Interimaire from "./components/Interimaire/Interimaire";
 import Agence from './components/Agence/Agence';
 import { auth,db } from "./lib/firebase";
+import { ChakraProvider } from '@chakra-ui/react'
+
 function App() {
 
 
@@ -40,6 +42,8 @@ function App() {
   }, []);
  
   return (
+    <ChakraProvider>
+
     <UserContext.Provider value={{ user, setUser }}>
       <div>
         {loading && <p>Loading</p>}
@@ -59,32 +63,8 @@ function App() {
             {!loading && !user && <Login setLoading={setLoading} />}
         </div>
     </UserContext.Provider>
-    /*  <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Acceuil />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/agence" element={<Agence />} />
-          <Route path="/interimaire" element={<Interimaire />} />
-
-        </Routes>
-     
-     </BrowserRouter> */
-    
-
-   /*  <div>
-      {user &&
-        <Header />
-      }
-      {user && !loading &&
-      <p>Bienvenue {user.email}</p>
-      }
-      {!user && !loading &&
-        <Signup />
-      }
-      {loading &&
-      <p>loading...</p>}
-    </div>
-    ; */
+    </ChakraProvider>
+   
     )
 
 }

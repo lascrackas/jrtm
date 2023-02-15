@@ -5,6 +5,7 @@ import { UserContext } from '../../Context/UserContext';
 import { getAuth} from "firebase/auth";
 import Header from '../Header/Header';
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { Spinner } from '@chakra-ui/react'
 const functions = getFunctions();
 
 const firebaseConfig = {
@@ -25,10 +26,12 @@ const Admin = () => {
 
     const { user, setUser } = useContext(UserContext);
     const [userToValidate,setUserToValidate] = useState([]);
+    const [loading,setLoading] = useState(false);
 
-    const validateAgency = (userUid) => {
+    const validateAgency = (user) => {
+        setLoading(true);
         const validateAgcy = httpsCallable(functions, 'validateAgency');
-        validateAgcy({userUid}).then((res)=>console.log(res)).catch(err=>console.log(err))
+        validateAgcy({userUid:user.id,email:user.email,firstName:user.firstName}).then(()=>{setLoading(false)}).catch(err=>setLoading(false))
     }
 
     const logout =async () => {
@@ -61,11 +64,12 @@ const Admin = () => {
 
         <div className='text-center'>
             <p className='text-2xl text-center mt-6'>Liste des agences a valider</p>
+            {loading &&<Spinner size='xl' className="mt-2" />}
             {userToValidate.map((user,idx)=>
             (
             <div key={idx} className=" mt-6 text-xl border border-gray-300 p-2 rounded-sm  flex items-center justify-between w-2/4 mx-auto">
                 <p className='uppercase'>{user.firstName+" "+user.lastName}</p>
-                <button onClick={()=> validateAgency(user.id)} className='bg-green-400 py-1 px-2 text-white rounded-md'>Valider</button>
+                <button onClick={()=> validateAgency(user)} className='bg-green-400 py-1 px-2 text-white rounded-md'>Valider</button>
                 </div>
             ))
             }

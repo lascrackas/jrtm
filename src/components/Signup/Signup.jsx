@@ -13,33 +13,34 @@ const Signup = ({role,setLogin}) => {
     const [firstName,setFirstName] = useState("")
     const [lastName,setLastName] = useState("")
     const [phone,setPhone] = useState("")
+    const [loading,setLoading] = useState(false);
+    const [error,setError] = useState("")
 
     const signup = (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError("")
         const createUser = httpsCallable(functions, 'createUsr');
         createUser({ email,password,firstName,lastName,phone,role })
         .then(async (userCredential) => {
           // Signed in 
-          console.log("dldldl")
-          console.log(userCredential)
           const userUid = userCredential.data.uid;
-          console.log(userUid);
           const userRef = doc(db, "users", userUid)
           const userSnap = await getDoc(userRef);
           if(userSnap.exists){
-              console.log("dmdmdm")
               const userData = userSnap.data();
               userData.id = userSnap.id;
               setUser(userData)
-              console.log(userData)
           }else{
               console.log("error")
           }
-          // ...
+          setLoading(false)
       })
       .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
+          setError("veuillez remplir tout les champs")
+          setLoading(false);
       });
     }
     
@@ -47,7 +48,7 @@ const Signup = ({role,setLogin}) => {
   return (
     <div>
         <form onSubmit={signup} className="bg-white mt-4 p-6 w-2/4 mx-auto rounded-lg shadow-md">
-  <h2 className="text-lg font-medium mb-1">Inscription en tant qu'{role}</h2>
+  <h2 className="text-xl font-medium mb-1">Inscription en tant qu'{role}</h2>
   <div className="mb-1">
     <label className="block font-medium mb-1" htmlFor="email">
       Email
@@ -114,19 +115,19 @@ const Signup = ({role,setLogin}) => {
       placeholder="Entrez votre numero de telephone"
     />
   </div>
-  <p className='text-center'>
+  <p className='text-center text-red-600 text-lg'>{error}</p>
+  <p className='text-center mt-2'>
     <button
         type="submit"
-        className="bg-indigo-500  text-white p-1 rounded-lg hover:bg-indigo-600"
+        className="bg-indigo-500 p-2  text-white text-xl rounded-lg hover:bg-indigo-600"
     >
-        Inscription
+        {loading?<span>Patientez...</span>:<span>Inscription</span>}
     </button>
+    <button onClick={()=> setLogin("login")} className='bg-black p-2 ml-2 text-white text-xl rounded-md'>Connexion</button>
 
   </p>
 </form>
-<p className='text-center mt-1'>
-    <button onClick={()=> setLogin("login")} className='bg-black p-1 text-white text-xl rounded-md'>Connexion</button>
-</p>
+
     </div>
   )
 }

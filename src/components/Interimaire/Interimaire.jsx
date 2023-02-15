@@ -64,7 +64,7 @@ const Interimaire = () => {
               <p>date de debut : {contract.startDate}</p>
               <p>date de fin : {contract.endDate}</p>
               <div className='flex items-center space-x-2 justify-center'>
-              <PDFDownloadLink document={<MyDocument data={contract} />} fileName="my-document.pdf">
+              <PDFDownloadLink document={<MyDocument data={contract} />} fileName={contract.interimaire+".pdf"}>
                 {({ blob, url, loading, error }) => (<button className='bg-green-400 p-2 rounded-md text-white'>Voir le contrat</button>)}
               </PDFDownloadLink>
               {contract.accepted==="oui" &&
